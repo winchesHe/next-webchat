@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js" integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs" crossorigin="anonymous"></script>
+    <script>
+      const socket = io('http://localhost:3000');
+      socket.on('connect', function() {
+        console.log('Connected');
+
+        // 创建新用户
+        // socket.emit('createMq', {username: 'winches', password: '123456'}, res => {
+        //   console.log(res);
+        // })
+
+        // 查找全部用户
+        socket.emit('findAllMq', res => {
+          console.log(res);
+        })
+
+        // 根据id查找用户
+        socket.emit('findOneMq', 1, res => {
+          console.log(res);
+        })
+
+        // 更换用户头像
+        // socket.emit('updateMq', {id: 3, username: '已更改', password: '1231256'}, res => {
+        //   console.log(res);
+        // })
+      });
+    </script>
+</head>
+<body>
+  
+</body>
+</html>
