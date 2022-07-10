@@ -11,7 +11,7 @@ import { useAppSelector } from '../store/hook'
 const http = 'http://localhost:3000';
 
 export default function ChatContent({
-  currentUser = 'yang',
+  currentUser = 'winches',
   setCurrentUser = new Function(),
   messages = [{
     sender: '',
