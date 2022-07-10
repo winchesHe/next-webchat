@@ -5,6 +5,8 @@ import { MqModule } from './mq/mq.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MqUser } from './mq/entity/mq.entity'
 import { AuthModule } from './auth/auth.module';
+import { MessageModule } from './message/message.module';
+import { Message } from './message/model/message.model';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -14,11 +16,12 @@ import { AuthModule } from './auth/auth.module';
     username: 'root',
     password: 'root',
     database: 'nextserve',
-    entities: [MqUser],
+    entities: [MqUser, Message],
     synchronize: true,
   }),
   MqModule,
-  AuthModule],
+  AuthModule,
+  MessageModule],
   controllers: [AppController],
   providers: [AppService],
 })

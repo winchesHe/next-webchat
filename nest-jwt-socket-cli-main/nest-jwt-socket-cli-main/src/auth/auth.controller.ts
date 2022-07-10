@@ -13,4 +13,11 @@ export class AuthController {
   async login(@Req() req: Request) {
     return this.authService.login(req.body);
   }
+
+  // 注册
+  @UseGuards(AuthGuard('local'))
+  @Post('/register')
+  async register(@Req() req: Request) {
+    return this.authService.register(req.body);
+  }
 }

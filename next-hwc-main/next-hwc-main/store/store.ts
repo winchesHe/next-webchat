@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import stateSlice from "./slice";
+import userSlice from './user-slice'
 
 export const store = configureStore({
   // 每个reducer代表一个模块的状态管理器
   reducer: {
-    state: stateSlice
+    state: userSlice,
   },
 });
 

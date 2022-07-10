@@ -1,8 +1,8 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket, WsResponse } from '@nestjs/websockets';
 import { MqService } from './mq.service';
 import { CreateMqDto } from './dto/create-mq.dto';
 import { UpdateMqDto, UpdataAvataro } from './dto/update-mq.dto';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
@@ -43,4 +43,30 @@ export class MqGateway {
   remove(@MessageBody() id: number) {
     return this.mqService.remove(id);
   }
+
+  @SubscribeMessage('connection')
+    t(
+        @MessageBody() data: {
+            username: string,
+        },
+        @ConnectedSocket() client: Socket,
+    ): WsResponse<unknown> {
+        client.emit('join', async (client) => {
+            client.join(data.username);
+        })
+        return { event: 'join', data: '服务端推送到客户端' };
+        //这里相当于服务端向客户端emit一个qaq事件
+    }
+
+    @SubscribeMessage('sendMessage')
+    sendMessage(
+        @MessageBody() data: {
+            to: string,
+        },
+        @ConnectedSocket() client: Socket,
+    ): WsResponse<unknown> {
+        client.broadcast.emit('showMessage');
+        client.emit('showMessage')
+        return;
+    }
 }
