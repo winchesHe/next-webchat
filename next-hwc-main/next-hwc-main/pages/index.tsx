@@ -17,7 +17,7 @@ type FormData = {
 };
 
 const Home: NextPage = () => {
-  const socket = io('http://localhost:3000');
+  const socket = io(http);
 
   // 发送注册
   async function login(formData: FormData) {
@@ -86,7 +86,7 @@ const Home: NextPage = () => {
     };
   }
 
-  // socket-io
+  // socket-io 测试socket-io
   // socket.on('connect', function() {
   //   console.log('Connected');
 
