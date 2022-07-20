@@ -1,12 +1,11 @@
-import axios from 'axios'
-import { useRef } from 'react'
-import styled from 'styled-components'
-import noCurrentUser from '../public/pictures/noCurrentUser.gif'
-import chatbgc from '../public/pictures/chat.png'
-// import { useSelector } from 'react-redux'
-import io from 'socket.io-client'
-import { notification, Spin } from 'antd'
-import { useAppSelector } from '../store/hook'
+import axios from 'axios';
+import { useRef } from 'react';
+import styled from 'styled-components';
+import noCurrentUser from '../public/pictures/noCurrentUser.gif';
+import chatbgc from '../public/pictures/chat.png';
+import io from 'socket.io-client';
+import { notification, Spin } from 'antd';
+import { useAppSelector } from '../store/hook';
 
 const http = 'http://localhost:3000';
 
@@ -22,15 +21,19 @@ export default function ChatContent({
   isloading = true,
   setIsloading = new Function()
 }) {
-  const socket = io(http)
-  const { value } = useAppSelector((state: any) => ({ ...state.state }))
-  const input = useRef<HTMLInputElement>(null)
 
+  const socket = io(http);
+  const input = useRef<HTMLInputElement>(null);
+  const { value } = useAppSelector((state: any) => ({ ...state.state }));
+
+  // 发送信息
   function sendMessage() {
-    const message = input.current!.value
+    const message = input.current!.value;
+
+    // 校验信息长度是否符合要求
     if (message.length > 0 && message.length <= 20) {
       setTimeout(() => {
-        let chatScreen = document.querySelector('#chat') as HTMLElement
+        let chatScreen = document.querySelector('#chat') as HTMLElement;
         (chatScreen) && (chatScreen.scrollTo(0, chatScreen.scrollHeight))
       }, 100);
       
@@ -39,20 +42,21 @@ export default function ChatContent({
         content: message,
         receiver: currentUser
       })
-        .then(res => {
-          socket.emit('sendMessage', {
-            to: currentUser
-          })
-          input.current!.value = ''
+      .then(res => {
+        socket.emit('sendMessage', {
+          to: currentUser
         })
-        .catch(err => console.log(err))
+        input.current!.value = ''
+      })
+      .catch(err => console.log(err));
     } else if (message.length > 20) {
       notification.warning({
         message: '警告提示',
         description: '消息长度不能超过20个字符'
-      })
+      });
     }
   }
+
   return (
     <Container>
       <img src={chatbgc.src} className='chatbgc' alt="" />
@@ -61,8 +65,7 @@ export default function ChatContent({
       }
       {
         currentUser === '' ?
-          <img className='noCurrentUser' src={noCurrentUser.src} alt="" />
-          :
+          <img className='noCurrentUser' src={noCurrentUser.src} alt="" /> :
           <div className='chatContent' >
             <div className="content" id='chat'>
               {
@@ -71,28 +74,26 @@ export default function ChatContent({
                     size='large'
                     className='loading'
                     tip="对话加载中...">
-                  </Spin>
-                  :
+                  </Spin> :
                   messages.map((message, index) => {
                     return (
-                      message.receiver === currentUser
-                        ?
-                        <div className='right' key={index}>
-                          {message.content}
-                        </div>
-                        :
-                        <div className='left' key={index}>
-                          {message.content}
-                        </div>
-                    )
+                        message.receiver === currentUser
+                          ?
+                          <div className='right' key={index}>
+                            {message.content}
+                          </div>
+                          :
+                          <div className='left' key={index}>
+                            {message.content}
+                          </div>
+                      )
                   })
               }
             </div>
             <div className="sender">
               <input ref={input} type="text" className='input' />
               <button className='send'
-                onClick={() => { sendMessage() }}
-              >发送消息</button>
+                      onClick={() => { sendMessage() }}>发送消息</button>
             </div>
           </div>
       }
@@ -194,6 +195,5 @@ position: relative;
       height: 100%;
       position: absolute;
       z-index: -1;
-  
 }
 `

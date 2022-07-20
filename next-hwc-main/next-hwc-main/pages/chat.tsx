@@ -1,20 +1,20 @@
-import { Button } from "antd"
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
-import styled from "styled-components"
-import ChatContent from "../components/ChatContent"
-import UserList from "../components/UserList"
-import img from "../public/pictures/chat.png"
-import { changeName } from "../store/user-slice"
-import { routerBeforEach } from "../utils/router-beforEach"
-import { NextPage } from "next"
+import { Button } from "antd";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import styled from "styled-components";
+import ChatContent from "../components/ChatContent";
+import UserList from "../components/UserList";
+import img from "../public/pictures/chat.png";
+import { changeName } from "../store/user-slice";
+import { routerBeforEach } from "../utils/router-beforEach";
+import { NextPage } from "next";
 
 const Chat: NextPage = () => {
-    const router = useRouter()
-    const [isloading, setIsloading] = useState(true)
-    const dispatch = useDispatch()
-    const [currentUser, setCurrentUser] = useState('')
+    const router = useRouter();
+    const [isloading, setIsloading] = useState(true);
+    const dispatch = useDispatch();
+    const [currentUser, setCurrentUser] = useState('');
     const [messages, setMessages] = useState([
         {
             sender: '',
@@ -22,14 +22,19 @@ const Chat: NextPage = () => {
             receiver: ''
         }
             
-    ])
+    ]);
+
+    // TODO：改变用户角色
     function changeMyName() {
         
     }
+
+    // 进入页面后设置当前用户并判断是否有权限访问 
     useEffect(() => {
         routerBeforEach(router)
         dispatch(changeName(localStorage.getItem('username') as string))
-    }, [])
+    }, []);
+
     return (
         <Container>
             <img src={img.src} alt="" className="background" />
@@ -41,6 +46,7 @@ const Chat: NextPage = () => {
         </Container>
     )
 }
+
 const Container = styled.div`
 display: flex;
 align-items: center;
@@ -59,7 +65,6 @@ height: 100vh;
     right: 1vw;
     z-index: 999;
 }
-
 `
 const ChatScreen = styled.div`
 width: 75vw;

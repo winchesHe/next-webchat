@@ -65,6 +65,7 @@ export class MqGateway {
         },
         @ConnectedSocket() client: Socket,
     ): WsResponse<unknown> {
+        // broadcast广播给所有客户端
         client.broadcast.emit('showMessage');
         client.emit('showMessage')
         return;

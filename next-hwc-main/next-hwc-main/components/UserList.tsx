@@ -1,10 +1,9 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-// import { useSelector } from 'react-redux'
-import styled from 'styled-components'
-import io from 'socket.io-client'
-import { Avatar } from 'antd'
-import { useAppSelector } from '../store/hook'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import io from 'socket.io-client';
+import { Avatar } from 'antd';
+import { useAppSelector } from '../store/hook';
 
 const http = 'http://localhost:3000';
 
@@ -19,16 +18,21 @@ export default function UserList({
     setMessages = new Function(),
     setIsloading = new Function()
 }) {
-    const socket = io(http)
-    const { username } = useAppSelector((state: any) => ({ ...state.state }))
-    const value = username?.value;
+    
+    const { username } = useAppSelector((state: any) => ({ ...state.state }));
     const [Users, setUsers] = useState([{
         username: '',
         avatar: '',
-    }])
+    }]);
+    const socket = io(http);
+    const value = username?.value;
+
+    // 设置当前的用户
     async function setCurrentChater(user: any) {
         setCurrentUser(user)
     }
+
+    // 获取当前用户信息
     function getCurentMessages() {
         axios.post(`${http}/message/list`, {
             "username": value,
@@ -37,35 +41,48 @@ export default function UserList({
             setMessages(res?.data?.data?.messageList)
         })
     }
+
+    // 删除当前用户信息
     function deletCurrentMessages() {
-        setMessages([])
+        setMessages([]);
     }
+
+    // 获取用户列表
+    function getUserList() {
+        axios.get(`${http}/users`).then(res => {
+            setUsers(res?.data);
+        })
+    }
+
+    // 监听当前用户变化
     useEffect(() => {
-        setIsloading(true)
-        deletCurrentMessages()
+        setIsloading(true);
+        deletCurrentMessages();
         if (currentUser !== '') {
-            getCurentMessages()
+            getCurentMessages();
         }
-    }, [currentUser])
+    }, [currentUser]);
+
+    // 监听信息变化有信息后就取消加载
     useEffect(() => {
         setTimeout(() => {
             setIsloading(false)
         }, 100);
-    }, [messages])
-    function getUserList() {
-        axios.get(`${http}/users`).then(res => {
-            setUsers(res?.data)
-        })
-    }
+    }, [messages]);
+
+    // 刚进页面获取用户列表
     useEffect(() => {
-        getUserList()
-    }, [])
+        getUserList();
+    }, []);
+
+    // 当发送信息后后台返回showMessage事件，收到后获取实时获取新信息
     useEffect(() => {
-        socket.on('showMessage', getCurentMessages)
+        socket.on('showMessage', getCurentMessages);
         return () => {
-            socket.off('showMessage')
+            socket.off('showMessage');
         }
-    })
+    });
+
     return (
         <Container>
             {
@@ -86,7 +103,7 @@ export default function UserList({
                 })
             }
             {
-                Users?.map((user, index) => {
+                Users?.map((user) => {
                     if (user.username == value) {
                         return (
                             <Avatar className='myAvatar' src={user.avatar}></Avatar>
